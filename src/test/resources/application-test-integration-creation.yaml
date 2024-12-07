@@ -1,0 +1,5 @@
+spring:
+  cloud:
+    function.definition: simpleConsumer
+    stream.bindings.simpleConsumer-in-0.destination: consumer-simple
+

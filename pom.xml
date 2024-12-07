@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.idealo.spring</groupId>
+    <groupId>fr.amoya.dev</groupId>
     <artifactId>spring-cloud-stream-binder-sqs</artifactId>
-    <version>3.0.0</version>
+    <version>${revision}</version>
+
+    <packaging>jar</packaging>
+
     <name>Spring Cloud Stream Binder for AWS SQS</name>
     <description>Allows you to use Spring Cloud Stream together with AWS SQS</description>
-    <url>https://github.com/idealo/spring-cloud-stream-binder-sqs</url>
+    <url>https://github.com/moya-a/spring-cloud-stream-binder-sqs</url>
 
     <developers>
         <developer>
-            <name>Heiko Rothe</name>
-            <email>heiko.rothe@idealo.de</email>
-            <url>https://github.com/mKeRix</url>
+            <name>Arnaud Moya</name>
+            <email>dev@amoya.fr</email>
+            <url>https://github.com/moya-a</url>
             <roles>
                 <role>maintainer</role>
             </roles>
@@ -29,9 +33,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:https://github.com/idealo/spring-cloud-stream-binder-sqs.git</connection>
-        <developerConnection>scm:git:https://github.com/idealo/spring-cloud-stream-binder-sqs.git</developerConnection>
-        <url>https://github.com/idealo/spring-cloud-stream-binder-sqs</url>
+        <connection>scm:git:https://github.com/moya-a/spring-cloud-stream-binder-sqs.git</connection>
+        <developerConnection>scm:git:https://github.com/moya-a/spring-cloud-stream-binder-sqs.git</developerConnection>
+        <url>https://github.com/moya-a/spring-cloud-stream-binder-sqs</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -39,53 +43,110 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/idealo/spring-cloud-stream-binder-sqs</url>
+            <url>https://maven.pkg.github.com/moya-a/spring-cloud-stream-binder-sqs</url>
         </repository>
     </distributionManagement>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <spring.cloud-version>2022.0.3</spring.cloud-version>
-        <spring.cloud-aws-version>3.0.1</spring.cloud-aws-version>
-        <spring.boot-version>3.1.0</spring.boot-version>
-        <spring.integration-version>3.0.0</spring.integration-version>
-        <testcontainers.version>1.18.3</testcontainers.version>
+        <revision>4.0.0-SNAPSHOT</revision>
 
-        <sonar.projectKey>idealo_spring-cloud-stream-binder-sqs</sonar.projectKey>
-        <sonar.organization>idealo</sonar.organization>
+        <java-version>21</java-version>
+        <maven.compiler.source>${java-version}</maven.compiler.source>
+        <maven.compiler.target>${java-version}</maven.compiler.target>
+
+        <encoding.utf-8>UTF-8</encoding.utf-8>
+        <project.build.sourceEncoding>${encoding.utf-8}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${encoding.utf-8}</project.reporting.outputEncoding>
+
+        <sonar.organization>moya-a</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.projectKey>moya-a_spring-cloud-stream-binder-sqs</sonar.projectKey>
+
+        <!-- Dependencies versions -->
+        <spring-boot.version>3.4.5</spring-boot.version>
+        <spring-cloud.version>2024.0.1</spring-cloud.version>
+        <spring-cloud-aws.version>3.3.0</spring-cloud-aws.version>
+        <spring-integration-aws.version>3.0.9</spring-integration-aws.version>
+
+        <maven-plugin-checkstyle.version>3.4.0</maven-plugin-checkstyle.version>
+        <maven-plugin-enforcer.version>3.4.1</maven-plugin-enforcer.version>
+        <maven-plugin-surefire.version>3.3.1</maven-plugin-surefire.version>
+        <maven-plugin-failsafe.version>3.5.2</maven-plugin-failsafe.version>
+        <maven-plugin-jacoco.version>0.8.12</maven-plugin-jacoco.version>
+        <maven-plugin-pitest.version>1.17.2</maven-plugin-pitest.version>
+        <maven-plugin-pitest-junit5.version>1.2.1</maven-plugin-pitest-junit5.version>
+        <maven-plugin-sonnar-scanner.version>5.0.0.4389</maven-plugin-sonnar-scanner.version>
+        <maven-plugin-dependency-check.version>11.1.1</maven-plugin-dependency-check.version>
+
+        <!-- Profile dependent properties -->
+        <skip.unit.test>false</skip.unit.test>
+        <skip.int.test>false</skip.int.test>
+        <skip.mut.test>false</skip.mut.test>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>only-unit-tests</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <skip.unit.test>false</skip.unit.test>
+                <skip.mut.test>true</skip.mut.test>
+                <skip.int.test>true</skip.int.test>
+            </properties>
+        </profile>
+        <profile>
+            <id>only-mutation-tests</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <skip.unit.test>true</skip.unit.test>
+                <skip.mut.test>false</skip.mut.test>
+                <skip.int.test>true</skip.int.test>
+            </properties>
+        </profile>
+        <profile>
+            <id>only-int-tests</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <skip.unit.test>true</skip.unit.test>
+                <skip.mut.test>true</skip.mut.test>
+                <skip.int.test>false</skip.int.test>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring.cloud-version}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot-version}</version>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>io.awspring.cloud</groupId>
                 <artifactId>spring-cloud-aws-dependencies</artifactId>
-                <version>${spring.cloud-aws-version}</version>
+                <version>${spring-cloud-aws.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers-bom</artifactId>
-                <version>${testcontainers.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>org.springframework.integration</groupId>
+                <artifactId>spring-integration-aws</artifactId>
+                <version>${spring-integration-aws.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -106,7 +167,6 @@
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-aws</artifactId>
-            <version>${spring.integration-version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -119,6 +179,7 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- TEST DEPS -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -140,8 +201,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>localstack</artifactId>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-testcontainers</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -164,18 +225,91 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.0</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-plugin-enforcer.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3,)</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>[21,)</version>
+                                </requireJavaVersion>
+                                <requireReleaseDeps>
+                                    <onlyWhenRelease>true</onlyWhenRelease>
+                                </requireReleaseDeps>
+                                <dependencyConvergence/>
+                                <banDuplicatePomDependencyVersions/>
+                                <banDynamicVersions/>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-plugin-checkstyle.version}</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <inputEncoding>UTF-8</inputEncoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failOnViolation>true</failOnViolation>
+                    <failsOnError>true</failsOnError>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>guava</artifactId>
+                        <version>33.3.1-jre</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-plugin-surefire.version}</version>
+                <configuration>
+                    <skip>${skip.unit.test}</skip>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>unit-tests</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.10</version>
+                <version>${maven-plugin-jacoco.version}</version>
+                <configuration>
+                    <append>true</append>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -184,92 +318,150 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>prepare-package</phase>
+                        <phase>test</phase>
+                        <configuration>
+                            <outputDirectory>target/jacoco-report</outputDirectory>
+                        </configuration>
                         <goals>
                             <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>${maven-plugin-pitest.version}</version>
+                <configuration>
+                    <skip>${skip.mut.test}</skip>
+                    <reportsDirectory>target/pit-reports</reportsDirectory>
+                    <outputFormats>HTML,XML</outputFormats>
+                    <targetClasses>
+                        <param>org.springframework.cloud.stream.binder.sqs.*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>org.springframework.cloud.stream.binder.sqs.*</param>
+                    </targetTests>
+                    <exportLineCoverage>true</exportLineCoverage>
+                    <failWhenNoMutations>false</failWhenNoMutations>
+                    <fullMutationMatrix>false</fullMutationMatrix>
+                    <features>
+                        <feature>-frecord</feature>
+                        <feature>+auto_threads</feature>
+                    </features>
+                    <avoidCallsTo>
+                        <avoidCallsTo>java.util.logging</avoidCallsTo>
+                        <avoidCallsTo>org.apache.log4j</avoidCallsTo>
+                        <avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
+                        <avoidCallsTo>org.slf4j</avoidCallsTo>
+                    </avoidCallsTo>
+                    <excludedClasses>
+                        <param>org.springframework.cloud.stream.binder.sqs.configuration.*</param>
+                        <param>org.springframework.cloud.stream.binder.sqs.properties.*</param>
+                        <param>org.springframework.cloud.stream.binder.sqs.provisioning.*</param>
+                        <param>fr.amoya.dev.spring.cloud.stream.binder.sqs.SqsHeaders</param>
+                    </excludedClasses>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>mutation-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>mutationCoverage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>${maven-plugin-pitest-junit5.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-plugin-failsafe.version}</version>
+                <configuration>
+                    <skip>${skip.int.test}</skip>
+                    <includes>
+                        <include>**/*IT.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*Test.java</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>${maven-plugin-dependency-check.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>${maven-plugin-sonnar-scanner.version}</version>
+                    <executions>
+                        <execution>
+                            <id>sonar-scanner</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sonar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <!-- explicitly define maven-deploy-plugin after other to force exec order -->
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>deploy</id>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>deploy</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
-
-    <profiles>
-        <profile>
-            <id>maven-central</id>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>ossrh</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-                <repository>
-                    <id>ossrh</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                            <stagingProgressTimeoutMinutes>10</stagingProgressTimeoutMinutes>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>3.3.0</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.5.0</version>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.1.0</version>
-                        <configuration>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 </project>

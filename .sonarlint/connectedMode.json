@@ -1,0 +1,5 @@
+{
+  "sonarCloudOrganization": "moya-a",
+  "projectKey": "moya-a_spring-cloud-stream-binder-sqs",
+  "region": "EU"
+}
