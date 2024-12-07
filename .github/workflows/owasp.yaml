@@ -1,0 +1,27 @@
+name: OWASP dependencyCheck
+on:
+  push:
+    branches:
+      - main
+jobs:
+  owasp:
+    name: Dependency Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up GraalVM 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'graalvm'
+          cache: 'maven'
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: OWASP
+        run: mvn -B --no-transfer-progress -DnvdApiKey=${{ secrets.NVD_API_KEY }} -Dmax.cvss.score=8 clean org.owasp:dependency-check-maven:check -U

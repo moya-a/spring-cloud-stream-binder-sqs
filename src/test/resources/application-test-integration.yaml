@@ -1,0 +1,25 @@
+spring:
+  cloud:
+    function.definition: simpleConsumer;manualAckConsumer;fifoConsumer;fifoProducer;customHeadersFifoProducer;simpleProducer;delayedProducer
+    stream:
+      bindings:
+        # Consumer
+        simpleConsumer-in-0.destination: consumer-simple
+        manualAckConsumer-in-0.destination: consumer-manual-ack
+        fifoConsumer-in-0.destination: consumer.fifo
+        # Producers
+        fifoProducer-out-0.destination: producer.fifo
+        customHeadersFifoProducer-out-0.destination: custom-headers.fifo
+        simpleProducer-out-0.destination: producer-simple
+        delayedProducer-out-0.destination: producer-delayed
+      sqs:
+        bindings:
+          manualAckConsumer-in-0:
+            consumer:
+              message-visibility: PT1S
+              acknowledgement-mode: manual
+          customHeadersFifoProducer-out-0:
+            producer:
+              message-header-prefix: custom-
+              fifo-message-group-id-header: gid
+              fifo-message-deduplication-id-header: ddid
