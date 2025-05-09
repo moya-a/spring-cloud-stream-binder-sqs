@@ -1,1 +1,2 @@
-sqs=de.idealo.spring.stream.binder.sqs.config.SqsBinderConfiguration
+sqs=fr.amoya.dev.spring.cloud.stream.binder.sqs.configuration.SqsBinderAutoConfiguration
+sqs=fr.amoya.dev.spring.cloud.stream.binder.sqs.configuration.ExtendedBindingHandlerMappingsProviderConfiguration

@@ -1,0 +1,2 @@
+fr.amoya.dev.spring.cloud.stream.binder.sqs.configuration.SqsBinderAutoConfiguration
+fr.amoya.dev.spring.cloud.stream.binder.sqs.configuration.ExtendedBindingHandlerMappingsProviderConfiguration
