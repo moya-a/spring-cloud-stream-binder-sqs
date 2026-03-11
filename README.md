@@ -28,6 +28,13 @@ upon [Spring Cloud AWS SQS library](https://docs.awspring.io/spring-cloud-aws/do
 ## Installation
 
 ```xml
+<repositories>
+    <repository>
+        <id>github</id>
+        <name>GitHub Packages</name>
+        <url>https://maven.pkg.github.com/moya-a/spring-cloud-stream-binder-sqs</url>
+    </repository>
+</repositories>
 
 <dependencies>
     <dependency>
@@ -36,6 +43,22 @@ upon [Spring Cloud AWS SQS library](https://docs.awspring.io/spring-cloud-aws/do
         <version>4.0.0</version>
     </dependency>
 </dependencies>
+```
+
+**Note**: Pulling from GitHub Packages (even public ones) requires a personal access token. You can create one by following the [GitHub documentation on personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token).
+
+For Gradle users, add the following to your `build.gradle`:
+
+```groovy
+repositories {
+    maven {
+        url "https://maven.pkg.github.com/moya-a/spring-cloud-stream-binder-sqs"
+        credentials {
+            username = System.getenv("GITHUB_USERNAME")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
+}
 ```
 
 ## Compatibility Matrix
